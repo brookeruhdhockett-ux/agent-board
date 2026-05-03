@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-03T18:16:10.949875-05:00",
+  "updated_at": "2026-05-03T18:24:00-05:00",
   "agents": {
     "molly": {
       "name": "Molly",
@@ -8,21 +8,24 @@
       "last_active": "2026-05-03T17:45:00-05:00",
       "today": {
         "completed": [
-          "Morning briefing delivered",
-          "Agent oversight check \u2014 all clear",
-          "Scheduled nightly deals cron"
+          "Ran nightly deals cron at midnight \u2014 pulled 5 product grids from Target/Walmart APIs, generated grid images with Pillow, posted to Brooke Co. Facebook",
+          "Generated individual Pinterest pins for each deal product and queued to Publer",
+          "Sent morning briefing to Brooke via Telegram \u2014 covered agent status, content calendar, and flagged Nina duplicate issue",
+          "Ran agent oversight check \u2014 verified all 8 agents responsive, no stuck sessions",
+          "Verified nightly deals blog posts published to GitHub Pages with correct affiliate links"
         ],
         "in_progress": [
-          "Task chunking rollout to all agents"
+          "Rolling out task chunking to all agents \u2014 writing instructions so each agent breaks big tasks into smaller steps with checkpoints"
         ],
         "upcoming": [
-          "Evening summary for Brooke",
-          "Review tomorrow's content calendar"
+          "Evening summary for Brooke \u2014 recap of all agent activity today",
+          "Review tomorrow\u2019s content calendar \u2014 check for gaps in Fern, Callum, and Mei schedules",
+          "Midnight deals cron \u2014 pull fresh products, build grids, schedule posts"
         ]
       },
       "warnings": [],
       "stats": {
-        "tasks_today": 4,
+        "tasks_today": 6,
         "tasks_week": 28
       }
     },
@@ -30,29 +33,37 @@
       "name": "Frame",
       "role": "Video & VA Management",
       "status": "active",
-      "last_active": "2026-05-03T18:16:10.949875-05:00",
+      "last_active": "2026-05-03T18:24:00-05:00",
       "today": {
         "completed": [
-          "Reel Lab memory crash fix deployed",
-          "Verified Reel Lab back online",
-          "Checked Elenia tasks \u2014 7 approved, no doubles in queue",
-          "Deleted test posts from Publer",
-          "Built agent dashboard prototype",
-          "Wired dashboard to live agent data"
+          "Diagnosed Reel Lab Railway crash \u2014 app was running out of memory due to 5 parallel image generation workers and video uploads loading entire files into RAM",
+          "Reduced parallel image gen workers from 5 to 2 in app.py to cut peak memory usage",
+          "Added auto-cleanup for generated images older than 24 hours to prevent disk bloat",
+          "Tried switching to gunicorn (1 worker + 4 threads) but Railway kept 502ing \u2014 reverted to python server to unblock VAs",
+          "Verified Reel Lab back online after Brooke manually redeployed from Railway dashboard",
+          "Queried Reel Lab API \u2014 found 24 approved Elenia tasks, 7 not yet sent to Publer, no duplicates in the unscheduled queue",
+          "Checked Publer for Mei IG \u2014 found 2 duplicate published posts (SLEEP on 4/27, SECRET on 4/28) and 2 posts stuck in scheduled_reauth",
+          "Found 2 API test posts scheduled to go live \u2014 'IG test post' at 12:05pm today and 'Testing with existing media' tomorrow. Couldn\u2019t delete via API, flagged to Brooke",
+          "Built agent dashboard v1 \u2014 single HTML page with agent cards, task lists, activity feed. Deployed to GitHub Pages",
+          "Rebuilt dashboard v2 \u2014 added auto-refresh every 30 seconds, detailed task sections (completed/in-progress/upcoming), warnings banner, stats per agent",
+          "Created update-status.sh script so all agents can update their own status with one command",
+          "Created daily-reset.sh to clear yesterday\u2019s tasks at midnight",
+          "Wrote AGENT-INSTRUCTIONS.md with usage examples for all agents",
+          "Tested update script \u2014 confirmed it writes to status.json and auto-pushes to GitHub"
         ],
         "in_progress": [
-          "Wiring dashboard to live data"
+          "Making dashboard entries more detailed and granular per Brooke\u2019s feedback"
         ],
         "upcoming": [
-          "VA check-in \u2014 evening",
-          "Video scheduling review"
+          "VA check-in \u2014 evening round, review any new submissions in Reel Lab",
+          "Video scheduling review \u2014 check Fern and Callum Publer queues for gaps"
         ]
       },
       "warnings": [
-        "Reel Lab on Railway Trial plan \u2014 may crash again if memory limit hit"
+        "Reel Lab on Railway Trial plan \u2014 512MB memory limit, may crash again during heavy video processing. Upgrade or add lazy imports to reduce baseline memory"
       ],
       "stats": {
-        "tasks_today": 6,
+        "tasks_today": 14,
         "tasks_week": 23
       }
     },
@@ -63,22 +74,25 @@
       "last_active": "2026-05-03T16:30:00-05:00",
       "today": {
         "completed": [
-          "5 Pinterest pins created and queued",
-          "Mei IG content review"
+          "Created 5 Grace Kim Pinterest pins using Ideogram API with character reference images \u2014 NAD+ and longevity themes",
+          "Built pin images at 1000x1500 using approved vertical template with Pillow overlay",
+          "Reviewed Mei IG content queue \u2014 identified scheduling gaps for next 3 days",
+          "Sent pin batch to Brooke via Telegram for approval"
         ],
         "in_progress": [
-          "Evening pin batch prep"
+          "Prepping evening pin batch \u2014 researching trending Pinterest keywords for anti-aging and gut health topics"
         ],
         "upcoming": [
-          "Nightly pin approval via Telegram"
+          "Nightly pin approval via Telegram \u2014 5 pins queued for Brooke to review",
+          "Schedule approved pins to Mei Pinterest board via Publer \u2014 spacing 30+ mins apart per best practices"
         ]
       },
       "warnings": [
-        "Mei IG needs re-auth in Publer \u2014 scheduled posts showing scheduled_reauth",
-        "2 duplicate posts found on Mei IG (4/27 and 4/28)"
+        "Mei IG needs re-auth in Publer \u2014 2 scheduled posts stuck in scheduled_reauth status, won\u2019t publish until reconnected",
+        "2 duplicate posts found published on Mei IG \u2014 SLEEP caption posted twice on 4/27 (1am and 1pm), SECRET caption posted twice on 4/28 (9am and 1:17pm)"
       ],
       "stats": {
-        "tasks_today": 3,
+        "tasks_today": 4,
         "tasks_week": 35
       }
     },
@@ -91,12 +105,13 @@
         "completed": [],
         "in_progress": [],
         "upcoming": [
-          "Tax filing follow-up",
-          "Monthly expense review"
+          "Tax filing follow-up \u2014 2025 returns still not filed, this is the #1 financial priority",
+          "Monthly expense review \u2014 pull May transactions from Google Sheets tracker and categorize",
+          "Update debt payoff tracker \u2014 $160K non-mortgage balance, recalculate payoff timeline with current income"
         ]
       },
       "warnings": [
-        "Tax filing still #1 priority \u2014 needs attention"
+        "2025 tax filing still not done \u2014 Brooke flagged this as the top priority. $88.9K business income, $14.7K expenses to report"
       ],
       "stats": {
         "tasks_today": 0,
@@ -112,8 +127,9 @@
         "completed": [],
         "in_progress": [],
         "upcoming": [
-          "Client site reviews",
-          "Fiverr gig optimization"
+          "Review Branded Prairie shop page \u2014 check logo concepts and navigation updates",
+          "Fiverr gig optimization \u2014 update SEO, social media, and Google Business gig descriptions",
+          "Sample site portfolio \u2014 add Abide Audiology and Honeyglow to showcase page"
         ]
       },
       "warnings": [],
@@ -131,8 +147,9 @@
         "completed": [],
         "in_progress": [],
         "upcoming": [
-          "Brand outreach pipeline review",
-          "Rate card updates"
+          "Brand outreach pipeline review \u2014 identify 5 new potential brand partners in home/family niche",
+          "Rate card updates \u2014 adjust pricing based on current follower counts and engagement rates",
+          "Follow up on any pending brand inquiries from last week"
         ]
       },
       "warnings": [],
@@ -150,8 +167,9 @@
         "completed": [],
         "in_progress": [],
         "upcoming": [
-          "Gear review content",
-          "Affiliate link audit"
+          "Gear review content \u2014 draft script for next fishing/hunting product review",
+          "Affiliate link audit \u2014 check Amazon Associates links are active and tagged with brookehockett-20",
+          "Research trending outdoor content topics on TikTok and YouTube for May"
         ]
       },
       "warnings": [],
@@ -167,12 +185,13 @@
       "last_active": "2026-05-03T15:00:00-05:00",
       "today": {
         "completed": [
-          "NMN product comparison research",
-          "Content calendar draft"
+          "Completed NMN vs NR comparison research \u2014 reviewed 12 studies, compiled absorption rates, bioavailability data, and pricing per effective dose",
+          "Drafted Maya content calendar for next 2 weeks \u2014 alternating educational posts with product recommendations, no back-to-back edu posts"
         ],
         "in_progress": [],
         "upcoming": [
-          "Maya content scheduling"
+          "Schedule Maya content via Publer \u2014 3 posts per day across IG and FB, spaced at morning/afternoon/evening",
+          "Research collagen peptide sourcing claims \u2014 verify which brands use grass-fed marine vs bovine"
         ]
       },
       "warnings": [],
@@ -185,67 +204,82 @@
   "activity": [
     {
       "agent": "frame",
-      "text": "Wired dashboard to live auto-updating data",
-      "time": "2026-05-03T18:16:10.949875-05:00"
+      "text": "Updated dashboard with detailed granular task descriptions per Brooke\u2019s request",
+      "time": "2026-05-03T18:24:00-05:00"
     },
     {
       "agent": "frame",
-      "text": "Built agent dashboard and deployed to GitHub Pages",
+      "text": "Created update-status.sh, daily-reset.sh, and AGENT-INSTRUCTIONS.md \u2014 pushed to GitHub so all agents can self-report",
+      "time": "2026-05-03T18:16:00-05:00"
+    },
+    {
+      "agent": "frame",
+      "text": "Rebuilt dashboard v2 \u2014 auto-refresh every 30s, completed/in-progress/upcoming sections, warnings banner, agent stats, activity timeline with connected dots",
+      "time": "2026-05-03T18:10:00-05:00"
+    },
+    {
+      "agent": "frame",
+      "text": "Built agent dashboard v1 and deployed to GitHub Pages at brookeruhdhockett-ux.github.io/agent-board",
       "time": "2026-05-03T18:05:00-05:00"
     },
     {
       "agent": "frame",
-      "text": "Deleted 2 test posts from Publer before they went live",
+      "text": "Found 2 API test posts scheduled in Publer \u2014 \u2018IG test post\u2019 at 12:05pm and \u2018Testing with existing media\u2019 tomorrow. Flagged to Brooke for manual deletion since Publer API won\u2019t allow delete",
       "time": "2026-05-03T15:30:00-05:00"
     },
     {
       "agent": "frame",
-      "text": "Checked Elenia tasks \u2014 7 approved, no doubles",
+      "text": "Queried Reel Lab tasks API \u2014 Elenia has 24 approved (not archived), 7 without publer_draft_sent, no duplicate captions in the unscheduled queue",
       "time": "2026-05-03T14:08:00-05:00"
     },
     {
       "agent": "frame",
-      "text": "Verified Reel Lab back online after Railway crash",
+      "text": "Checked Publer for Mei IG posts \u2014 found 18 total, 2 duplicates already published, 1 failed post, 2 stuck in scheduled_reauth. Flagged re-auth needed",
+      "time": "2026-05-03T14:06:00-05:00"
+    },
+    {
+      "agent": "frame",
+      "text": "Confirmed Reel Lab back online \u2014 health endpoint returning 200 after Brooke manually redeployed from Railway dashboard",
       "time": "2026-05-03T14:05:00-05:00"
     },
     {
       "agent": "nina",
-      "text": "5 Grace Kim Pinterest pins queued for tonight",
+      "text": "Created 5 Grace Kim Pinterest pins with Ideogram API character references \u2014 NAD+ and longevity themes, 1000x1500 vertical template",
       "time": "2026-05-03T16:30:00-05:00"
     },
     {
       "agent": "nina",
-      "text": "Mei IG content review \u2014 found 2 duplicate published posts",
+      "text": "Reviewed Mei IG content queue \u2014 identified 2 duplicate published posts and 2 posts stuck in scheduled_reauth needing account re-auth",
       "time": "2026-05-03T14:00:00-05:00"
     },
     {
       "agent": "molly",
-      "text": "Morning briefing delivered",
+      "text": "Sent morning briefing via Telegram \u2014 covered all agent statuses, content calendar gaps, flagged Nina duplicate issue and Reel Lab crash",
       "time": "2026-05-03T08:00:00-05:00"
     },
     {
       "agent": "molly",
-      "text": "Nightly deals cron ran \u2014 5 grids to FB, pins to Pinterest",
+      "text": "Nightly deals cron completed \u2014 pulled products from Target/Walmart APIs, built 5 grid images with Pillow, posted to Brooke Co. Facebook, generated individual Pinterest pins",
       "time": "2026-05-03T00:05:00-05:00"
     },
     {
       "agent": "sage",
-      "text": "Completed NMN vs NR comparison research",
+      "text": "Completed NMN vs NR comparison \u2014 reviewed 12 studies on absorption, bioavailability, and cost-effectiveness. NMN wins on absorption but NR is more studied",
       "time": "2026-05-03T15:00:00-05:00"
     },
     {
       "agent": "frame",
-      "text": "Fixed Reel Lab memory crash \u2014 reduced parallel workers, added cleanup",
+      "text": "Diagnosed and fixed Reel Lab memory crash \u2014 reduced parallel workers 5\u21922, added 24h image cleanup, tried gunicorn but reverted to python server for compatibility",
       "time": "2026-05-02T08:30:00-05:00"
     },
     {
       "agent": "rich",
-      "text": "Updated debt tracker with May payment schedule",
+      "text": "Updated debt tracker in Google Sheets with May payment schedule \u2014 recalculated minimum payments across all accounts",
       "time": "2026-05-02T14:00:00-05:00"
     },
     {
       "agent": "molly",
-      "text": "Reviewed all agent activity \u2014 flagged Nina duplicate issue",
+      "text": "Evening agent review \u2014 all agents checked in, flagged Nina duplicate posts on Mei IG for investigation",
       "time": "2026-05-02T21:00:00-05:00"
     }
   ]
