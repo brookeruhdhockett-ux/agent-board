@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenClaw — Agent Board</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FAF7F2;
+    --card-bg: rgba(255,255,255,0.55);
+    --taupe: #C8B6A6;
+    --sage: #A3C4A2;
+    --blush: #E8C4C4;
+    --dusty-blue: #B5C9D3;
+    --lavender: #C5B8D9;
+    --honey: #D4C49A;
+    --coral: #D4A59A;
+    --mint: #9DC5B8;
+    --charcoal: #4A4A4A;
+    --muted: #8A8580;
+    --border: rgba(255,255,255,0.8);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background-color: var(--cream);
+    color: var(--charcoal);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* subtle gingham background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      linear-gradient(45deg, rgba(163,196,162,0.06) 25%, transparent 25%),
+      linear-gradient(-45deg, rgba(163,196,162,0.06) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, rgba(163,196,162,0.06) 75%),
+      linear-gradient(-45deg, transparent 75%, rgba(163,196,162,0.06) 75%);
+    background-size: 20px 20px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  /* header */
+  .header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 500;
+    font-size: 2rem;
+    color: var(--charcoal);
+    letter-spacing: 0.02em;
+  }
+
+  .header .subtitle {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-top: 0.4rem;
+  }
+
+  .header .date {
+    font-size: 0.8rem;
+    color: var(--taupe);
+    margin-top: 0.3rem;
+  }
+
+  /* summary bar */
+  .summary-bar {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .summary-stat {
+    text-align: center;
+  }
+
+  .summary-stat .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--charcoal);
+  }
+
+  .summary-stat .label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* agent grid */
+  .agent-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .agent-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+    padding: 1.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .agent-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.07);
+  }
+
+  .agent-card .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+
+  .agent-card .agent-name {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 1.15rem;
+  }
+
+  .agent-card .agent-role {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    text-transform: lowercase;
+  }
+
+  .status-pill .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .status-active { background: rgba(163,196,162,0.2); color: #5a7d59; }
+  .status-active .dot { background: var(--sage); }
+  .status-idle { background: rgba(200,182,166,0.2); color: #8a7b6e; }
+  .status-idle .dot { background: var(--taupe); }
+  .status-attention { background: rgba(232,196,196,0.3); color: #9e6b6b; }
+  .status-attention .dot { background: var(--blush); }
+
+  .agent-card .accent-bar {
+    width: 100%;
+    height: 3px;
+    border-radius: 2px;
+    margin-bottom: 1rem;
+    opacity: 0.6;
+  }
+
+  .task-list {
+    list-style: none;
+  }
+
+  .task-list li {
+    font-size: 0.82rem;
+    color: var(--charcoal);
+    padding: 0.4rem 0;
+    border-bottom: 1px solid rgba(200,182,166,0.15);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .task-list li:last-child { border-bottom: none; }
+
+  .task-list .check {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1.5px solid var(--taupe);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+  }
+
+  .task-list .check.done {
+    background: var(--sage);
+    border-color: var(--sage);
+  }
+
+  .task-list .check.done::after {
+    content: '';
+    width: 6px;
+    height: 3px;
+    border-left: 1.5px solid white;
+    border-bottom: 1.5px solid white;
+    transform: rotate(-45deg);
+    margin-top: -1px;
+  }
+
+  .task-list .task-text.done {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+
+  /* activity feed */
+  .feed-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 500;
+    font-size: 1.3rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .feed {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+    padding: 1.5rem;
+  }
+
+  .feed-item {
+    display: flex;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(200,182,166,0.12);
+  }
+
+  .feed-item:last-child { border-bottom: none; }
+
+  .feed-dot {
+    flex-shrink: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-top: 0.35rem;
+  }
+
+  .feed-content {
+    flex: 1;
+  }
+
+  .feed-content .feed-agent {
+    font-weight: 600;
+    font-size: 0.82rem;
+  }
+
+  .feed-content .feed-text {
+    font-size: 0.82rem;
+    color: var(--charcoal);
+    margin-top: 0.15rem;
+  }
+
+  .feed-content .feed-time {
+    font-size: 0.72rem;
+    color: var(--taupe);
+    margin-top: 0.25rem;
+  }
+
+  /* responsive */
+  @media (max-width: 600px) {
+    .container { padding: 1.25rem 1rem; }
+    .header h1 { font-size: 1.5rem; }
+    .agent-grid { grid-template-columns: 1fr; }
+    .summary-bar { gap: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h1>Brooke Co. Agent Board</h1>
+    <div class="subtitle">your team, at a glance</div>
+    <div class="date" id="current-date"></div>
+  </div>
+
+  <div class="summary-bar">
+    <div class="summary-stat">
+      <div class="num">8</div>
+      <div class="label">agents</div>
+    </div>
+    <div class="summary-stat">
+      <div class="num" id="active-count">5</div>
+      <div class="label">active</div>
+    </div>
+    <div class="summary-stat">
+      <div class="num" id="tasks-done">12</div>
+      <div class="label">tasks today</div>
+    </div>
+  </div>
+
+  <div class="agent-grid" id="agent-grid"></div>
+
+  <div class="feed-section">
+    <h2>Activity</h2>
+    <div class="feed" id="activity-feed"></div>
+  </div>
+
+</div>
+
+<script>
+// Agent data — this would eventually pull from a live API
+const agents = [
+  {
+    name: "Molly",
+    role: "EA & Chief of Staff",
+    color: "#C5B8D9",
+    status: "active",
+    tasks: [
+      { text: "Morning briefing sent", done: true },
+      { text: "Agent oversight check", done: true },
+      { text: "Task chunking rollout", done: false },
+      { text: "Evening summary", done: false },
+    ]
+  },
+  {
+    name: "Frame",
+    role: "Video & VA Management",
+    color: "#B5C9D3",
+    status: "active",
+    tasks: [
+      { text: "Reel Lab memory fix deployed", done: true },
+      { text: "VA check-in — 9am", done: true },
+      { text: "VA check-in — 1pm", done: false },
+      { text: "Video scheduling", done: false },
+    ]
+  },
+  {
+    name: "Nina",
+    role: "Beyond 60 Beauty & Pinterest",
+    color: "#A3C4A2",
+    status: "active",
+    tasks: [
+      { text: "5 Pinterest pins scheduled", done: true },
+      { text: "Mei content review", done: true },
+      { text: "Evening pin batch", done: false },
+    ]
+  },
+  {
+    name: "Rich",
+    role: "Personal Finance",
+    color: "#D4C49A",
+    status: "idle",
+    tasks: [
+      { text: "Tax filing research", done: true },
+      { text: "Expense tracking update", done: false },
+    ]
+  },
+  {
+    name: "Paige",
+    role: "Web Design",
+    color: "#E8C4C4",
+    status: "idle",
+    tasks: [
+      { text: "Client site updates", done: true },
+      { text: "Portfolio review", done: false },
+    ]
+  },
+  {
+    name: "Riley",
+    role: "Brand Retainers & Deals",
+    color: "#D4A59A",
+    status: "idle",
+    tasks: [
+      { text: "Rate card updates", done: true },
+      { text: "Outreach pipeline review", done: false },
+    ]
+  },
+  {
+    name: "Buck",
+    role: "The Reel Johnny — Outdoors",
+    color: "#9DC5B8",
+    status: "idle",
+    tasks: [
+      { text: "Gear review draft", done: false },
+      { text: "Affiliate link check", done: false },
+    ]
+  },
+  {
+    name: "Sage",
+    role: "Peptides & Supplements",
+    color: "#C8B6A6",
+    status: "active",
+    tasks: [
+      { text: "Product research batch", done: true },
+      { text: "Content calendar update", done: false },
+    ]
+  }
+];
+
+const activity = [
+  { agent: "Frame", color: "#B5C9D3", text: "Fixed Reel Lab memory crash — deployed to Railway", time: "2 hours ago" },
+  { agent: "Molly", color: "#C5B8D9", text: "Morning briefing delivered to Brooke", time: "3 hours ago" },
+  { agent: "Nina", color: "#A3C4A2", text: "5 Grace Kim pins approved and scheduled", time: "4 hours ago" },
+  { agent: "Frame", color: "#B5C9D3", text: "Checked Elenia tasks — 7 approved, no doubles", time: "5 hours ago" },
+  { agent: "Rich", color: "#D4C49A", text: "Updated debt tracker spreadsheet", time: "6 hours ago" },
+  { agent: "Sage", color: "#C8B6A6", text: "Completed NMN product comparison research", time: "8 hours ago" },
+  { agent: "Nina", color: "#A3C4A2", text: "Created 3 new Pinterest pin templates", time: "10 hours ago" },
+  { agent: "Molly", color: "#C5B8D9", text: "Reviewed all agent activity — no issues", time: "12 hours ago" },
+];
+
+// Render
+function render() {
+  // Date
+  const now = new Date();
+  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
+
+  // Count active
+  const activeCount = agents.filter(a => a.status === 'active').length;
+  document.getElementById('active-count').textContent = activeCount;
+
+  // Count done tasks
+  const tasksDone = agents.reduce((sum, a) => sum + a.tasks.filter(t => t.done).length, 0);
+  document.getElementById('tasks-done').textContent = tasksDone;
+
+  // Agent cards
+  const grid = document.getElementById('agent-grid');
+  grid.innerHTML = agents.map(a => {
+    const statusClass = a.status === 'active' ? 'status-active' :
+                        a.status === 'attention' ? 'status-attention' : 'status-idle';
+    const tasksHtml = a.tasks.map(t => `
+      <li>
+        <div class="check ${t.done ? 'done' : ''}"></div>
+        <span class="task-text ${t.done ? 'done' : ''}">${t.text}</span>
+      </li>
+    `).join('');
+
+    return `
+      <div class="agent-card">
+        <div class="accent-bar" style="background: ${a.color}"></div>
+        <div class="card-header">
+          <span class="agent-name">${a.name}</span>
+          <span class="status-pill ${statusClass}">
+            <span class="dot"></span>
+            ${a.status}
+          </span>
+        </div>
+        <div class="agent-role">${a.role}</div>
+        <ul class="task-list">${tasksHtml}</ul>
+      </div>
+    `;
+  }).join('');
+
+  // Activity feed
+  const feed = document.getElementById('activity-feed');
+  feed.innerHTML = activity.map(a => `
+    <div class="feed-item">
+      <div class="feed-dot" style="background: ${a.color}"></div>
+      <div class="feed-content">
+        <div class="feed-agent">${a.agent}</div>
+        <div class="feed-text">${a.text}</div>
+        <div class="feed-time">${a.time}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+render();
+</script>
+
+</body>
+</html>
