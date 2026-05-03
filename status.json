@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-03T18:16:10.001400-05:00",
+  "updated_at": "2026-05-03T18:16:10.949875-05:00",
   "agents": {
     "molly": {
       "name": "Molly",
@@ -30,7 +30,7 @@
       "name": "Frame",
       "role": "Video & VA Management",
       "status": "active",
-      "last_active": "2026-05-03T18:16:10.001400-05:00",
+      "last_active": "2026-05-03T18:16:10.949875-05:00",
       "today": {
         "completed": [
           "Reel Lab memory crash fix deployed",
@@ -183,6 +183,11 @@
     }
   },
   "activity": [
+    {
+      "agent": "frame",
+      "text": "Wired dashboard to live auto-updating data",
+      "time": "2026-05-03T18:16:10.949875-05:00"
+    },
     {
       "agent": "frame",
       "text": "Built agent dashboard and deployed to GitHub Pages",
