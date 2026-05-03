@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenClaw — Agent Board</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+<title>Brooke Co. — Agent Board</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --cream: #FAF7F2;
-    --card-bg: rgba(255,255,255,0.55);
+    --card-bg: rgba(255,255,255,0.6);
     --taupe: #C8B6A6;
     --sage: #A3C4A2;
     --blush: #E8C4C4;
@@ -19,7 +19,9 @@
     --mint: #9DC5B8;
     --charcoal: #4A4A4A;
     --muted: #8A8580;
+    --light-muted: #B5B0AB;
     --border: rgba(255,255,255,0.8);
+    --danger: #C27070;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -29,296 +31,279 @@
     background-color: var(--cream);
     color: var(--charcoal);
     min-height: 100vh;
-    padding: 0;
   }
 
-  /* subtle gingham background */
   body::before {
     content: '';
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     background-image:
-      linear-gradient(45deg, rgba(163,196,162,0.06) 25%, transparent 25%),
-      linear-gradient(-45deg, rgba(163,196,162,0.06) 25%, transparent 25%),
-      linear-gradient(45deg, transparent 75%, rgba(163,196,162,0.06) 75%),
-      linear-gradient(-45deg, transparent 75%, rgba(163,196,162,0.06) 75%);
+      linear-gradient(45deg, rgba(163,196,162,0.05) 25%, transparent 25%),
+      linear-gradient(-45deg, rgba(163,196,162,0.05) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, rgba(163,196,162,0.05) 75%),
+      linear-gradient(-45deg, transparent 75%, rgba(163,196,162,0.05) 75%);
     background-size: 20px 20px;
     pointer-events: none;
     z-index: 0;
   }
 
   .container {
-    position: relative;
-    z-index: 1;
-    max-width: 1200px;
+    position: relative; z-index: 1;
+    max-width: 1280px;
     margin: 0 auto;
     padding: 2rem 1.5rem;
   }
 
-  /* header */
+  /* ─── header ─── */
   .header {
     text-align: center;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
   }
-
   .header h1 {
     font-family: 'Playfair Display', serif;
-    font-weight: 500;
-    font-size: 2rem;
+    font-weight: 600; font-size: 2.2rem;
     color: var(--charcoal);
-    letter-spacing: 0.02em;
+  }
+  .header .subtitle { font-size: 0.9rem; color: var(--muted); margin-top: 0.3rem; }
+  .header .meta-row {
+    display: flex; justify-content: center; align-items: center;
+    gap: 1.5rem; margin-top: 0.5rem; flex-wrap: wrap;
+  }
+  .header .date { font-size: 0.8rem; color: var(--taupe); }
+  .header .live-dot {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    font-size: 0.75rem; color: var(--sage);
+  }
+  .header .live-dot .pulse {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--sage);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
   }
 
-  .header .subtitle {
-    font-size: 0.9rem;
-    color: var(--muted);
-    margin-top: 0.4rem;
-  }
-
-  .header .date {
-    font-size: 0.8rem;
-    color: var(--taupe);
-    margin-top: 0.3rem;
-  }
-
-  /* summary bar */
+  /* ─── summary ─── */
   .summary-bar {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
+    display: flex; justify-content: center;
+    gap: 2.5rem; margin-bottom: 2rem; flex-wrap: wrap;
   }
-
-  .summary-stat {
-    text-align: center;
-  }
-
+  .summary-stat { text-align: center; }
   .summary-stat .num {
     font-family: 'Playfair Display', serif;
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: var(--charcoal);
+    font-size: 2rem; font-weight: 700; color: var(--charcoal);
   }
-
   .summary-stat .label {
-    font-size: 0.75rem;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    font-size: 0.72rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.08em;
   }
 
-  /* agent grid */
+  /* ─── warnings banner ─── */
+  .warnings-banner {
+    background: rgba(194,112,112,0.08);
+    border: 1px solid rgba(194,112,112,0.2);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.75rem;
+  }
+  .warnings-banner h3 {
+    font-size: 0.8rem; font-weight: 600;
+    color: var(--danger); text-transform: uppercase;
+    letter-spacing: 0.06em; margin-bottom: 0.5rem;
+  }
+  .warnings-banner .warning-item {
+    display: flex; align-items: flex-start; gap: 0.5rem;
+    font-size: 0.82rem; color: var(--charcoal);
+    padding: 0.3rem 0;
+  }
+  .warnings-banner .warning-item .w-agent {
+    font-weight: 600; flex-shrink: 0; min-width: 50px;
+  }
+  .warnings-banner.hidden { display: none; }
+
+  /* ─── agent grid ─── */
   .agent-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.25rem;
     margin-bottom: 2.5rem;
   }
 
   .agent-card {
     background: var(--card-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: 18px;
     box-shadow: 0 4px 24px rgba(0,0,0,0.04);
     padding: 1.5rem;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
   }
-
   .agent-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.07);
+    box-shadow: 0 8px 36px rgba(0,0,0,0.07);
   }
 
-  .agent-card .card-header {
-    display: flex;
-    align-items: center;
+  .agent-card .accent-bar {
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 4px; opacity: 0.7;
+  }
+
+  .card-top {
+    display: flex; align-items: flex-start;
     justify-content: space-between;
+    margin-bottom: 0.2rem; margin-top: 0.25rem;
+  }
+
+  .agent-name {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600; font-size: 1.2rem;
+  }
+
+  .agent-role {
+    font-size: 0.78rem; color: var(--muted);
     margin-bottom: 0.75rem;
   }
 
-  .agent-card .agent-name {
-    font-family: 'Playfair Display', serif;
-    font-weight: 600;
-    font-size: 1.15rem;
-  }
-
-  .agent-card .agent-role {
-    font-size: 0.78rem;
-    color: var(--muted);
+  .last-active {
+    font-size: 0.7rem; color: var(--light-muted);
     margin-bottom: 1rem;
   }
 
   .status-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-size: 0.7rem;
-    font-weight: 500;
-    padding: 0.25rem 0.65rem;
-    border-radius: 999px;
-    text-transform: lowercase;
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    font-size: 0.7rem; font-weight: 500;
+    padding: 0.2rem 0.6rem; border-radius: 999px;
   }
-
-  .status-pill .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-  }
-
+  .status-pill .dot { width: 6px; height: 6px; border-radius: 50%; }
   .status-active { background: rgba(163,196,162,0.2); color: #5a7d59; }
   .status-active .dot { background: var(--sage); }
   .status-idle { background: rgba(200,182,166,0.2); color: #8a7b6e; }
   .status-idle .dot { background: var(--taupe); }
-  .status-attention { background: rgba(232,196,196,0.3); color: #9e6b6b; }
-  .status-attention .dot { background: var(--blush); }
+  .status-attention { background: rgba(194,112,112,0.15); color: #9e5555; }
+  .status-attention .dot { background: var(--danger); }
 
-  .agent-card .accent-bar {
-    width: 100%;
-    height: 3px;
-    border-radius: 2px;
-    margin-bottom: 1rem;
-    opacity: 0.6;
-  }
-
-  .task-list {
-    list-style: none;
-  }
-
-  .task-list li {
-    font-size: 0.82rem;
-    color: var(--charcoal);
-    padding: 0.4rem 0;
+  /* stats row */
+  .stats-row {
+    display: flex; gap: 1.5rem; margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
     border-bottom: 1px solid rgba(200,182,166,0.15);
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
+  }
+  .stat-item { }
+  .stat-item .s-num { font-weight: 600; font-size: 1rem; }
+  .stat-item .s-label { font-size: 0.68rem; color: var(--muted); }
+
+  /* task sections */
+  .task-section {
+    margin-bottom: 0.75rem;
+  }
+  .task-section-label {
+    font-size: 0.68rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--light-muted);
+    margin-bottom: 0.35rem;
+  }
+  .task-section-label.completed-label { color: var(--sage); }
+  .task-section-label.progress-label { color: var(--dusty-blue); }
+  .task-section-label.upcoming-label { color: var(--taupe); }
+
+  .task-list { list-style: none; }
+  .task-list li {
+    font-size: 0.8rem; color: var(--charcoal);
+    padding: 0.3rem 0;
+    display: flex; align-items: flex-start; gap: 0.45rem;
+  }
+  .task-list .icon {
+    flex-shrink: 0; font-size: 0.7rem; margin-top: 2px;
+    width: 14px; text-align: center;
+  }
+  .task-list .done-text { color: var(--muted); }
+
+  /* card warnings */
+  .card-warnings {
+    margin-top: 0.75rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid rgba(194,112,112,0.15);
+  }
+  .card-warning {
+    font-size: 0.75rem; color: var(--danger);
+    padding: 0.2rem 0;
+    display: flex; align-items: flex-start; gap: 0.4rem;
   }
 
-  .task-list li:last-child { border-bottom: none; }
-
-  .task-list .check {
-    flex-shrink: 0;
-    width: 16px;
-    height: 16px;
-    border-radius: 4px;
-    border: 1.5px solid var(--taupe);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 1px;
-  }
-
-  .task-list .check.done {
-    background: var(--sage);
-    border-color: var(--sage);
-  }
-
-  .task-list .check.done::after {
-    content: '';
-    width: 6px;
-    height: 3px;
-    border-left: 1.5px solid white;
-    border-bottom: 1.5px solid white;
-    transform: rotate(-45deg);
-    margin-top: -1px;
-  }
-
-  .task-list .task-text.done {
-    text-decoration: line-through;
-    color: var(--muted);
-  }
-
-  /* activity feed */
+  /* ─── activity feed ─── */
+  .feed-section { margin-bottom: 2rem; }
   .feed-section h2 {
     font-family: 'Playfair Display', serif;
-    font-weight: 500;
-    font-size: 1.3rem;
-    margin-bottom: 1.25rem;
+    font-weight: 500; font-size: 1.4rem;
+    margin-bottom: 1rem;
   }
-
   .feed {
     background: var(--card-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: 18px;
     box-shadow: 0 4px 24px rgba(0,0,0,0.04);
-    padding: 1.5rem;
+    padding: 1.25rem 1.5rem;
   }
-
   .feed-item {
-    display: flex;
-    gap: 1rem;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid rgba(200,182,166,0.12);
+    display: flex; gap: 0.85rem;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid rgba(200,182,166,0.1);
   }
-
   .feed-item:last-child { border-bottom: none; }
-
+  .feed-dot-col {
+    display: flex; flex-direction: column; align-items: center;
+    padding-top: 0.3rem;
+  }
   .feed-dot {
+    width: 10px; height: 10px; border-radius: 50%;
     flex-shrink: 0;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    margin-top: 0.35rem;
   }
-
-  .feed-content {
-    flex: 1;
+  .feed-line {
+    width: 1px; flex: 1;
+    background: rgba(200,182,166,0.2);
+    margin-top: 4px;
   }
+  .feed-item:last-child .feed-line { display: none; }
+  .feed-content { flex: 1; }
+  .feed-agent { font-weight: 600; font-size: 0.82rem; }
+  .feed-text { font-size: 0.82rem; color: var(--charcoal); margin-top: 0.1rem; }
+  .feed-time { font-size: 0.7rem; color: var(--taupe); margin-top: 0.2rem; }
 
-  .feed-content .feed-agent {
-    font-weight: 600;
-    font-size: 0.82rem;
-  }
-
-  .feed-content .feed-text {
-    font-size: 0.82rem;
-    color: var(--charcoal);
-    margin-top: 0.15rem;
-  }
-
-  .feed-content .feed-time {
-    font-size: 0.72rem;
-    color: var(--taupe);
-    margin-top: 0.25rem;
-  }
-
-  /* responsive */
-  @media (max-width: 600px) {
+  /* ─── responsive ─── */
+  @media (max-width: 640px) {
     .container { padding: 1.25rem 1rem; }
-    .header h1 { font-size: 1.5rem; }
+    .header h1 { font-size: 1.6rem; }
     .agent-grid { grid-template-columns: 1fr; }
-    .summary-bar { gap: 1.25rem; }
+    .summary-bar { gap: 1.5rem; }
   }
 </style>
 </head>
 <body>
 
 <div class="container">
-
   <div class="header">
-    <h1>Brooke Co. Agent Board</h1>
-    <div class="subtitle">your team, at a glance</div>
-    <div class="date" id="current-date"></div>
+    <h1>Brooke Co.</h1>
+    <div class="subtitle">agent board</div>
+    <div class="meta-row">
+      <div class="date" id="current-date"></div>
+      <div class="live-dot"><span class="pulse"></span> auto-updating</div>
+    </div>
   </div>
 
   <div class="summary-bar">
-    <div class="summary-stat">
-      <div class="num">8</div>
-      <div class="label">agents</div>
-    </div>
-    <div class="summary-stat">
-      <div class="num" id="active-count">5</div>
-      <div class="label">active</div>
-    </div>
-    <div class="summary-stat">
-      <div class="num" id="tasks-done">12</div>
-      <div class="label">tasks today</div>
-    </div>
+    <div class="summary-stat"><div class="num" id="s-agents">—</div><div class="label">agents</div></div>
+    <div class="summary-stat"><div class="num" id="s-active">—</div><div class="label">active</div></div>
+    <div class="summary-stat"><div class="num" id="s-tasks">—</div><div class="label">done today</div></div>
+    <div class="summary-stat"><div class="num" id="s-warnings">—</div><div class="label">warnings</div></div>
+  </div>
+
+  <div class="warnings-banner hidden" id="warnings-banner">
+    <h3>Needs Attention</h3>
+    <div id="warnings-list"></div>
   </div>
 
   <div class="agent-grid" id="agent-grid"></div>
@@ -327,168 +312,168 @@
     <h2>Activity</h2>
     <div class="feed" id="activity-feed"></div>
   </div>
-
 </div>
 
 <script>
-// Agent data — this would eventually pull from a live API
-const agents = [
-  {
-    name: "Molly",
-    role: "EA & Chief of Staff",
-    color: "#C5B8D9",
-    status: "active",
-    tasks: [
-      { text: "Morning briefing sent", done: true },
-      { text: "Agent oversight check", done: true },
-      { text: "Task chunking rollout", done: false },
-      { text: "Evening summary", done: false },
-    ]
-  },
-  {
-    name: "Frame",
-    role: "Video & VA Management",
-    color: "#B5C9D3",
-    status: "active",
-    tasks: [
-      { text: "Reel Lab memory fix deployed", done: true },
-      { text: "VA check-in — 9am", done: true },
-      { text: "VA check-in — 1pm", done: false },
-      { text: "Video scheduling", done: false },
-    ]
-  },
-  {
-    name: "Nina",
-    role: "Beyond 60 Beauty & Pinterest",
-    color: "#A3C4A2",
-    status: "active",
-    tasks: [
-      { text: "5 Pinterest pins scheduled", done: true },
-      { text: "Mei content review", done: true },
-      { text: "Evening pin batch", done: false },
-    ]
-  },
-  {
-    name: "Rich",
-    role: "Personal Finance",
-    color: "#D4C49A",
-    status: "idle",
-    tasks: [
-      { text: "Tax filing research", done: true },
-      { text: "Expense tracking update", done: false },
-    ]
-  },
-  {
-    name: "Paige",
-    role: "Web Design",
-    color: "#E8C4C4",
-    status: "idle",
-    tasks: [
-      { text: "Client site updates", done: true },
-      { text: "Portfolio review", done: false },
-    ]
-  },
-  {
-    name: "Riley",
-    role: "Brand Retainers & Deals",
-    color: "#D4A59A",
-    status: "idle",
-    tasks: [
-      { text: "Rate card updates", done: true },
-      { text: "Outreach pipeline review", done: false },
-    ]
-  },
-  {
-    name: "Buck",
-    role: "The Reel Johnny — Outdoors",
-    color: "#9DC5B8",
-    status: "idle",
-    tasks: [
-      { text: "Gear review draft", done: false },
-      { text: "Affiliate link check", done: false },
-    ]
-  },
-  {
-    name: "Sage",
-    role: "Peptides & Supplements",
-    color: "#C8B6A6",
-    status: "active",
-    tasks: [
-      { text: "Product research batch", done: true },
-      { text: "Content calendar update", done: false },
-    ]
-  }
-];
+const AGENT_COLORS = {
+  molly: '#C5B8D9', frame: '#B5C9D3', nina: '#A3C4A2', rich: '#D4C49A',
+  paige: '#E8C4C4', riley: '#D4A59A', buck: '#9DC5B8', sage: '#C8B6A6'
+};
 
-const activity = [
-  { agent: "Frame", color: "#B5C9D3", text: "Fixed Reel Lab memory crash — deployed to Railway", time: "2 hours ago" },
-  { agent: "Molly", color: "#C5B8D9", text: "Morning briefing delivered to Brooke", time: "3 hours ago" },
-  { agent: "Nina", color: "#A3C4A2", text: "5 Grace Kim pins approved and scheduled", time: "4 hours ago" },
-  { agent: "Frame", color: "#B5C9D3", text: "Checked Elenia tasks — 7 approved, no doubles", time: "5 hours ago" },
-  { agent: "Rich", color: "#D4C49A", text: "Updated debt tracker spreadsheet", time: "6 hours ago" },
-  { agent: "Sage", color: "#C8B6A6", text: "Completed NMN product comparison research", time: "8 hours ago" },
-  { agent: "Nina", color: "#A3C4A2", text: "Created 3 new Pinterest pin templates", time: "10 hours ago" },
-  { agent: "Molly", color: "#C5B8D9", text: "Reviewed all agent activity — no issues", time: "12 hours ago" },
-];
+const STATUS_FILE = 'status.json';
+let data = null;
 
-// Render
-function render() {
-  // Date
+function timeAgo(dateStr) {
+  const d = new Date(dateStr);
   const now = new Date();
-  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-  document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
+  const mins = Math.floor((now - d) / 60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return mins + 'm ago';
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return hrs + 'h ago';
+  const days = Math.floor(hrs / 24);
+  return days + 'd ago';
+}
 
-  // Count active
-  const activeCount = agents.filter(a => a.status === 'active').length;
-  document.getElementById('active-count').textContent = activeCount;
+function render(data) {
+  const agents = data.agents;
+  const agentKeys = Object.keys(agents);
 
-  // Count done tasks
-  const tasksDone = agents.reduce((sum, a) => sum + a.tasks.filter(t => t.done).length, 0);
-  document.getElementById('tasks-done').textContent = tasksDone;
+  // date
+  const now = new Date();
+  document.getElementById('current-date').textContent =
+    now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
 
-  // Agent cards
-  const grid = document.getElementById('agent-grid');
-  grid.innerHTML = agents.map(a => {
-    const statusClass = a.status === 'active' ? 'status-active' :
-                        a.status === 'attention' ? 'status-attention' : 'status-idle';
-    const tasksHtml = a.tasks.map(t => `
-      <li>
-        <div class="check ${t.done ? 'done' : ''}"></div>
-        <span class="task-text ${t.done ? 'done' : ''}">${t.text}</span>
-      </li>
-    `).join('');
+  // summary
+  const activeCount = agentKeys.filter(k => agents[k].status === 'active').length;
+  const tasksToday = agentKeys.reduce((s, k) => s + (agents[k].today?.completed?.length || 0), 0);
+  const allWarnings = agentKeys.flatMap(k => (agents[k].warnings || []).map(w => ({ agent: agents[k].name, text: w })));
+
+  document.getElementById('s-agents').textContent = agentKeys.length;
+  document.getElementById('s-active').textContent = activeCount;
+  document.getElementById('s-tasks').textContent = tasksToday;
+  document.getElementById('s-warnings').textContent = allWarnings.length;
+
+  // warnings banner
+  const banner = document.getElementById('warnings-banner');
+  if (allWarnings.length) {
+    banner.classList.remove('hidden');
+    document.getElementById('warnings-list').innerHTML = allWarnings.map(w =>
+      `<div class="warning-item"><span class="w-agent">${w.agent}:</span> ${w.text}</div>`
+    ).join('');
+  } else {
+    banner.classList.add('hidden');
+  }
+
+  // agent cards
+  document.getElementById('agent-grid').innerHTML = agentKeys.map(key => {
+    const a = agents[key];
+    const color = AGENT_COLORS[key] || '#C8B6A6';
+    const statusClass = a.warnings?.length ? 'status-attention' :
+                        a.status === 'active' ? 'status-active' : 'status-idle';
+    const statusLabel = a.warnings?.length ? 'needs attention' : a.status;
+
+    const completed = a.today?.completed || [];
+    const inProgress = a.today?.in_progress || [];
+    const upcoming = a.today?.upcoming || [];
+    const stats = a.stats || {};
+
+    let sections = '';
+
+    if (completed.length) {
+      sections += `
+        <div class="task-section">
+          <div class="task-section-label completed-label">completed</div>
+          <ul class="task-list">${completed.map(t =>
+            `<li><span class="icon" style="color:var(--sage)">&#10003;</span><span class="done-text">${t}</span></li>`
+          ).join('')}</ul>
+        </div>`;
+    }
+
+    if (inProgress.length) {
+      sections += `
+        <div class="task-section">
+          <div class="task-section-label progress-label">in progress</div>
+          <ul class="task-list">${inProgress.map(t =>
+            `<li><span class="icon" style="color:var(--dusty-blue)">&#9654;</span><span>${t}</span></li>`
+          ).join('')}</ul>
+        </div>`;
+    }
+
+    if (upcoming.length) {
+      sections += `
+        <div class="task-section">
+          <div class="task-section-label upcoming-label">upcoming</div>
+          <ul class="task-list">${upcoming.map(t =>
+            `<li><span class="icon" style="color:var(--taupe)">&#9675;</span><span>${t}</span></li>`
+          ).join('')}</ul>
+        </div>`;
+    }
+
+    let warningsHtml = '';
+    if (a.warnings?.length) {
+      warningsHtml = `<div class="card-warnings">${a.warnings.map(w =>
+        `<div class="card-warning"><span style="flex-shrink:0">&#9888;</span> ${w}</div>`
+      ).join('')}</div>`;
+    }
 
     return `
       <div class="agent-card">
-        <div class="accent-bar" style="background: ${a.color}"></div>
-        <div class="card-header">
+        <div class="accent-bar" style="background:${color}"></div>
+        <div class="card-top">
           <span class="agent-name">${a.name}</span>
-          <span class="status-pill ${statusClass}">
-            <span class="dot"></span>
-            ${a.status}
-          </span>
+          <span class="status-pill ${statusClass}"><span class="dot"></span>${statusLabel}</span>
         </div>
         <div class="agent-role">${a.role}</div>
-        <ul class="task-list">${tasksHtml}</ul>
-      </div>
-    `;
+        <div class="last-active">last active ${timeAgo(a.last_active)}</div>
+        <div class="stats-row">
+          <div class="stat-item"><div class="s-num">${stats.tasks_today ?? 0}</div><div class="s-label">today</div></div>
+          <div class="stat-item"><div class="s-num">${stats.tasks_week ?? 0}</div><div class="s-label">this week</div></div>
+        </div>
+        ${sections}
+        ${warningsHtml}
+      </div>`;
   }).join('');
 
-  // Activity feed
-  const feed = document.getElementById('activity-feed');
-  feed.innerHTML = activity.map(a => `
-    <div class="feed-item">
-      <div class="feed-dot" style="background: ${a.color}"></div>
-      <div class="feed-content">
-        <div class="feed-agent">${a.agent}</div>
-        <div class="feed-text">${a.text}</div>
-        <div class="feed-time">${a.time}</div>
-      </div>
-    </div>
-  `).join('');
+  // activity feed
+  const activity = (data.activity || [])
+    .sort((a, b) => new Date(b.time) - new Date(a.time));
+
+  document.getElementById('activity-feed').innerHTML = activity.map(a => {
+    const color = AGENT_COLORS[a.agent] || '#C8B6A6';
+    const name = agents[a.agent]?.name || a.agent;
+    return `
+      <div class="feed-item">
+        <div class="feed-dot-col">
+          <div class="feed-dot" style="background:${color}"></div>
+          <div class="feed-line"></div>
+        </div>
+        <div class="feed-content">
+          <div class="feed-agent">${name}</div>
+          <div class="feed-text">${a.text}</div>
+          <div class="feed-time">${timeAgo(a.time)}</div>
+        </div>
+      </div>`;
+  }).join('');
 }
 
-render();
+async function loadData() {
+  try {
+    const resp = await fetch(STATUS_FILE + '?t=' + Date.now());
+    if (resp.ok) {
+      data = await resp.json();
+      render(data);
+    }
+  } catch (e) {
+    console.log('Fetch error, will retry:', e);
+  }
+}
+
+// Initial load
+loadData();
+
+// Auto-refresh every 30 seconds
+setInterval(loadData, 30000);
 </script>
 
 </body>

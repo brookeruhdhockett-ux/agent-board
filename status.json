@@ -1,0 +1,198 @@
+{
+  "updated_at": "2026-05-03T18:10:00-05:00",
+  "agents": {
+    "molly": {
+      "name": "Molly",
+      "role": "EA & Chief of Staff",
+      "status": "active",
+      "last_active": "2026-05-03T17:45:00-05:00",
+      "today": {
+        "completed": [
+          "Morning briefing delivered",
+          "Agent oversight check — all clear",
+          "Scheduled nightly deals cron"
+        ],
+        "in_progress": [
+          "Task chunking rollout to all agents"
+        ],
+        "upcoming": [
+          "Evening summary for Brooke",
+          "Review tomorrow's content calendar"
+        ]
+      },
+      "warnings": [],
+      "stats": {
+        "tasks_today": 4,
+        "tasks_week": 28
+      }
+    },
+    "frame": {
+      "name": "Frame",
+      "role": "Video & VA Management",
+      "status": "active",
+      "last_active": "2026-05-03T18:05:00-05:00",
+      "today": {
+        "completed": [
+          "Reel Lab memory crash fix deployed",
+          "Verified Reel Lab back online",
+          "Checked Elenia tasks — 7 approved, no doubles in queue",
+          "Deleted test posts from Publer",
+          "Built agent dashboard prototype"
+        ],
+        "in_progress": [
+          "Wiring dashboard to live data"
+        ],
+        "upcoming": [
+          "VA check-in — evening",
+          "Video scheduling review"
+        ]
+      },
+      "warnings": [
+        "Reel Lab on Railway Trial plan — may crash again if memory limit hit"
+      ],
+      "stats": {
+        "tasks_today": 6,
+        "tasks_week": 22
+      }
+    },
+    "nina": {
+      "name": "Nina",
+      "role": "Beyond 60 Beauty & Pinterest",
+      "status": "active",
+      "last_active": "2026-05-03T16:30:00-05:00",
+      "today": {
+        "completed": [
+          "5 Pinterest pins created and queued",
+          "Mei IG content review"
+        ],
+        "in_progress": [
+          "Evening pin batch prep"
+        ],
+        "upcoming": [
+          "Nightly pin approval via Telegram"
+        ]
+      },
+      "warnings": [
+        "Mei IG needs re-auth in Publer — scheduled posts showing scheduled_reauth",
+        "2 duplicate posts found on Mei IG (4/27 and 4/28)"
+      ],
+      "stats": {
+        "tasks_today": 3,
+        "tasks_week": 35
+      }
+    },
+    "rich": {
+      "name": "Rich",
+      "role": "Personal Finance",
+      "status": "idle",
+      "last_active": "2026-05-02T14:00:00-05:00",
+      "today": {
+        "completed": [],
+        "in_progress": [],
+        "upcoming": [
+          "Tax filing follow-up",
+          "Monthly expense review"
+        ]
+      },
+      "warnings": [
+        "Tax filing still #1 priority — needs attention"
+      ],
+      "stats": {
+        "tasks_today": 0,
+        "tasks_week": 5
+      }
+    },
+    "paige": {
+      "name": "Paige",
+      "role": "Web Design",
+      "status": "idle",
+      "last_active": "2026-05-01T11:00:00-05:00",
+      "today": {
+        "completed": [],
+        "in_progress": [],
+        "upcoming": [
+          "Client site reviews",
+          "Fiverr gig optimization"
+        ]
+      },
+      "warnings": [],
+      "stats": {
+        "tasks_today": 0,
+        "tasks_week": 3
+      }
+    },
+    "riley": {
+      "name": "Riley",
+      "role": "Brand Retainers & Deals",
+      "status": "idle",
+      "last_active": "2026-05-01T09:00:00-05:00",
+      "today": {
+        "completed": [],
+        "in_progress": [],
+        "upcoming": [
+          "Brand outreach pipeline review",
+          "Rate card updates"
+        ]
+      },
+      "warnings": [],
+      "stats": {
+        "tasks_today": 0,
+        "tasks_week": 2
+      }
+    },
+    "buck": {
+      "name": "Buck",
+      "role": "The Reel Johnny — Outdoors",
+      "status": "idle",
+      "last_active": "2026-04-30T20:00:00-05:00",
+      "today": {
+        "completed": [],
+        "in_progress": [],
+        "upcoming": [
+          "Gear review content",
+          "Affiliate link audit"
+        ]
+      },
+      "warnings": [],
+      "stats": {
+        "tasks_today": 0,
+        "tasks_week": 1
+      }
+    },
+    "sage": {
+      "name": "Sage",
+      "role": "Peptides & Supplements",
+      "status": "active",
+      "last_active": "2026-05-03T15:00:00-05:00",
+      "today": {
+        "completed": [
+          "NMN product comparison research",
+          "Content calendar draft"
+        ],
+        "in_progress": [],
+        "upcoming": [
+          "Maya content scheduling"
+        ]
+      },
+      "warnings": [],
+      "stats": {
+        "tasks_today": 2,
+        "tasks_week": 12
+      }
+    }
+  },
+  "activity": [
+    { "agent": "frame", "text": "Built agent dashboard and deployed to GitHub Pages", "time": "2026-05-03T18:05:00-05:00" },
+    { "agent": "frame", "text": "Deleted 2 test posts from Publer before they went live", "time": "2026-05-03T15:30:00-05:00" },
+    { "agent": "frame", "text": "Checked Elenia tasks — 7 approved, no doubles", "time": "2026-05-03T14:08:00-05:00" },
+    { "agent": "frame", "text": "Verified Reel Lab back online after Railway crash", "time": "2026-05-03T14:05:00-05:00" },
+    { "agent": "nina", "text": "5 Grace Kim Pinterest pins queued for tonight", "time": "2026-05-03T16:30:00-05:00" },
+    { "agent": "nina", "text": "Mei IG content review — found 2 duplicate published posts", "time": "2026-05-03T14:00:00-05:00" },
+    { "agent": "molly", "text": "Morning briefing delivered", "time": "2026-05-03T08:00:00-05:00" },
+    { "agent": "molly", "text": "Nightly deals cron ran — 5 grids to FB, pins to Pinterest", "time": "2026-05-03T00:05:00-05:00" },
+    { "agent": "sage", "text": "Completed NMN vs NR comparison research", "time": "2026-05-03T15:00:00-05:00" },
+    { "agent": "frame", "text": "Fixed Reel Lab memory crash — reduced parallel workers, added cleanup", "time": "2026-05-02T08:30:00-05:00" },
+    { "agent": "rich", "text": "Updated debt tracker with May payment schedule", "time": "2026-05-02T14:00:00-05:00" },
+    { "agent": "molly", "text": "Reviewed all agent activity — flagged Nina duplicate issue", "time": "2026-05-02T21:00:00-05:00" }
+  ]
+}
