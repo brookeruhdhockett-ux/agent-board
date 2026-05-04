@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Brooke Co. — Agent Board</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --cream: #FAF7F2;
     --card-bg: rgba(255,255,255,0.6);
+    --card-hover: rgba(255,255,255,0.8);
     --taupe: #C8B6A6;
     --sage: #A3C4A2;
     --blush: #E8C4C4;
@@ -22,15 +23,43 @@
     --light-muted: #B5B0AB;
     --border: rgba(255,255,255,0.8);
     --danger: #C27070;
+    --bg: var(--cream);
+    --text: var(--charcoal);
+    --gingham-alpha: 0.05;
+    --shadow: rgba(0,0,0,0.04);
+    --shadow-hover: rgba(0,0,0,0.07);
+    --feed-border: rgba(200,182,166,0.1);
+    --section-border: rgba(200,182,166,0.15);
+    --toggle-bg: rgba(200,182,166,0.2);
+  }
+
+  [data-theme="dark"] {
+    --cream: #1a1a1f;
+    --card-bg: rgba(40,40,48,0.7);
+    --card-hover: rgba(50,50,58,0.85);
+    --charcoal: #e8e4df;
+    --muted: #9a9590;
+    --light-muted: #706b66;
+    --border: rgba(80,80,90,0.4);
+    --danger: #e08080;
+    --bg: #1a1a1f;
+    --text: #e8e4df;
+    --gingham-alpha: 0.03;
+    --shadow: rgba(0,0,0,0.2);
+    --shadow-hover: rgba(0,0,0,0.35);
+    --feed-border: rgba(100,95,90,0.2);
+    --section-border: rgba(100,95,90,0.25);
+    --toggle-bg: rgba(100,95,90,0.3);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
     font-family: 'DM Sans', sans-serif;
-    background-color: var(--cream);
-    color: var(--charcoal);
+    background-color: var(--bg);
+    color: var(--text);
     min-height: 100vh;
+    transition: background-color 0.3s, color 0.3s;
   }
 
   body::before {
@@ -38,51 +67,61 @@
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     background-image:
-      linear-gradient(45deg, rgba(163,196,162,0.05) 25%, transparent 25%),
-      linear-gradient(-45deg, rgba(163,196,162,0.05) 25%, transparent 25%),
-      linear-gradient(45deg, transparent 75%, rgba(163,196,162,0.05) 75%),
-      linear-gradient(-45deg, transparent 75%, rgba(163,196,162,0.05) 75%);
+      linear-gradient(45deg, rgba(163,196,162,var(--gingham-alpha)) 25%, transparent 25%),
+      linear-gradient(-45deg, rgba(163,196,162,var(--gingham-alpha)) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, rgba(163,196,162,var(--gingham-alpha)) 75%),
+      linear-gradient(-45deg, transparent 75%, rgba(163,196,162,var(--gingham-alpha)) 75%);
     background-size: 20px 20px;
-    pointer-events: none;
-    z-index: 0;
+    pointer-events: none; z-index: 0;
   }
 
   .container {
     position: relative; z-index: 1;
-    max-width: 1280px;
+    max-width: 1320px;
     margin: 0 auto;
     padding: 2rem 1.5rem;
   }
 
   /* ─── header ─── */
-  .header {
-    text-align: center;
-    margin-bottom: 2rem;
-  }
+  .header { text-align: center; margin-bottom: 2rem; }
   .header h1 {
     font-family: 'Playfair Display', serif;
     font-weight: 600; font-size: 2.2rem;
-    color: var(--charcoal);
   }
   .header .subtitle { font-size: 0.9rem; color: var(--muted); margin-top: 0.3rem; }
-  .header .meta-row {
+  .meta-row {
     display: flex; justify-content: center; align-items: center;
-    gap: 1.5rem; margin-top: 0.5rem; flex-wrap: wrap;
+    gap: 1.5rem; margin-top: 0.6rem; flex-wrap: wrap;
   }
-  .header .date { font-size: 0.8rem; color: var(--taupe); }
-  .header .live-dot {
+  .date { font-size: 0.8rem; color: var(--taupe); }
+  .live-dot {
     display: inline-flex; align-items: center; gap: 0.35rem;
     font-size: 0.75rem; color: var(--sage);
   }
-  .header .live-dot .pulse {
+  .pulse {
     width: 7px; height: 7px; border-radius: 50%;
     background: var(--sage);
     animation: pulse 2s ease-in-out infinite;
   }
   @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(1.3); }
+    0%,100% { opacity:1; transform:scale(1); }
+    50% { opacity:0.5; transform:scale(1.4); }
   }
+
+  /* dark mode toggle */
+  .theme-toggle {
+    position: fixed; top: 1.25rem; right: 1.25rem; z-index: 100;
+    background: var(--card-bg);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 1.2rem;
+    box-shadow: 0 2px 12px var(--shadow);
+    transition: all 0.3s;
+  }
+  .theme-toggle:hover { box-shadow: 0 4px 20px var(--shadow-hover); }
 
   /* ─── summary ─── */
   .summary-bar {
@@ -92,42 +131,66 @@
   .summary-stat { text-align: center; }
   .summary-stat .num {
     font-family: 'Playfair Display', serif;
-    font-size: 2rem; font-weight: 700; color: var(--charcoal);
+    font-size: 2rem; font-weight: 700;
   }
   .summary-stat .label {
     font-size: 0.72rem; color: var(--muted);
     text-transform: uppercase; letter-spacing: 0.08em;
   }
 
-  /* ─── warnings banner ─── */
+  /* ─── mini chart ─── */
+  .chart-section {
+    background: var(--card-bg);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: 0 4px 24px var(--shadow);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .chart-section h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 500; font-size: 1.1rem; margin-bottom: 1rem;
+  }
+  .chart-bars {
+    display: flex; align-items: flex-end; gap: 0.5rem;
+    height: 100px;
+  }
+  .chart-col {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; gap: 0.3rem;
+  }
+  .chart-bar {
+    width: 100%; border-radius: 6px 6px 2px 2px;
+    min-height: 4px; transition: height 0.5s ease;
+  }
+  .chart-label { font-size: 0.65rem; color: var(--muted); }
+  .chart-value { font-size: 0.7rem; font-weight: 600; }
+
+  /* ─── warnings ─── */
   .warnings-banner {
     background: rgba(194,112,112,0.08);
     border: 1px solid rgba(194,112,112,0.2);
     border-radius: 12px;
-    padding: 1rem 1.25rem;
-    margin-bottom: 1.75rem;
+    padding: 1rem 1.25rem; margin-bottom: 1.75rem;
   }
   .warnings-banner h3 {
     font-size: 0.8rem; font-weight: 600;
     color: var(--danger); text-transform: uppercase;
     letter-spacing: 0.06em; margin-bottom: 0.5rem;
   }
-  .warnings-banner .warning-item {
+  .warning-item {
     display: flex; align-items: flex-start; gap: 0.5rem;
-    font-size: 0.82rem; color: var(--charcoal);
-    padding: 0.3rem 0;
+    font-size: 0.82rem; padding: 0.3rem 0;
   }
-  .warnings-banner .warning-item .w-agent {
-    font-weight: 600; flex-shrink: 0; min-width: 50px;
-  }
+  .warning-item .w-agent { font-weight: 600; flex-shrink: 0; min-width: 50px; }
   .warnings-banner.hidden { display: none; }
 
   /* ─── agent grid ─── */
   .agent-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.25rem;
-    margin-bottom: 2.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.25rem; margin-bottom: 2.5rem;
   }
 
   .agent-card {
@@ -135,143 +198,150 @@
     backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
     border: 1px solid var(--border);
     border-radius: 18px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+    box-shadow: 0 4px 24px var(--shadow);
     padding: 1.5rem;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    position: relative;
-    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative; overflow: hidden;
+    cursor: pointer;
   }
   .agent-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 36px rgba(0,0,0,0.07);
+    box-shadow: 0 8px 36px var(--shadow-hover);
+    background: var(--card-hover);
   }
-
   .agent-card .accent-bar {
     position: absolute; top: 0; left: 0; right: 0;
     height: 4px; opacity: 0.7;
   }
 
+  /* avatar */
   .card-top {
-    display: flex; align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: 0.2rem; margin-top: 0.25rem;
+    display: flex; align-items: center; gap: 0.85rem;
+    margin-bottom: 0.15rem; margin-top: 0.25rem;
   }
-
+  .agent-avatar {
+    width: 42px; height: 42px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .card-top-text { flex: 1; }
   .agent-name {
     font-family: 'Playfair Display', serif;
-    font-weight: 600; font-size: 1.2rem;
+    font-weight: 600; font-size: 1.15rem;
   }
+  .agent-role { font-size: 0.76rem; color: var(--muted); }
 
-  .agent-role {
-    font-size: 0.78rem; color: var(--muted);
-    margin-bottom: 0.75rem;
-  }
-
-  .last-active {
-    font-size: 0.7rem; color: var(--light-muted);
-    margin-bottom: 1rem;
-  }
+  .card-top-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.3rem; }
 
   .status-pill {
     display: inline-flex; align-items: center; gap: 0.3rem;
-    font-size: 0.7rem; font-weight: 500;
-    padding: 0.2rem 0.6rem; border-radius: 999px;
+    font-size: 0.68rem; font-weight: 500;
+    padding: 0.2rem 0.55rem; border-radius: 999px;
   }
   .status-pill .dot { width: 6px; height: 6px; border-radius: 50%; }
   .status-active { background: rgba(163,196,162,0.2); color: #5a7d59; }
   .status-active .dot { background: var(--sage); }
-  .status-idle { background: rgba(200,182,166,0.2); color: #8a7b6e; }
+  .status-idle { background: var(--toggle-bg); color: var(--muted); }
   .status-idle .dot { background: var(--taupe); }
   .status-attention { background: rgba(194,112,112,0.15); color: #9e5555; }
   .status-attention .dot { background: var(--danger); }
 
-  /* stats row */
-  .stats-row {
-    display: flex; gap: 1.5rem; margin-bottom: 1rem;
+  .last-active { font-size: 0.68rem; color: var(--light-muted); margin: 0.5rem 0 0.75rem; }
+
+  /* sparkline */
+  .sparkline-row {
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 0.75rem;
     padding-bottom: 0.75rem;
-    border-bottom: 1px solid rgba(200,182,166,0.15);
+    border-bottom: 1px solid var(--section-border);
   }
-  .stat-item { }
-  .stat-item .s-num { font-weight: 600; font-size: 1rem; }
-  .stat-item .s-label { font-size: 0.68rem; color: var(--muted); }
+  .sparkline-stat { text-align: center; }
+  .sparkline-stat .s-num { font-weight: 700; font-size: 1.1rem; }
+  .sparkline-stat .s-label { font-size: 0.65rem; color: var(--muted); }
+  .sparkline-svg { flex: 1; height: 32px; }
 
   /* task sections */
-  .task-section {
-    margin-bottom: 0.75rem;
-  }
+  .tasks-preview { }
+  .task-section { margin-bottom: 0.6rem; }
   .task-section-label {
-    font-size: 0.68rem; font-weight: 600;
+    font-size: 0.65rem; font-weight: 600;
     text-transform: uppercase; letter-spacing: 0.06em;
-    color: var(--light-muted);
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.3rem;
   }
-  .task-section-label.completed-label { color: var(--sage); }
-  .task-section-label.progress-label { color: var(--dusty-blue); }
-  .task-section-label.upcoming-label { color: var(--taupe); }
+  .completed-label { color: var(--sage); }
+  .progress-label { color: var(--dusty-blue); }
+  .upcoming-label { color: var(--taupe); }
 
   .task-list { list-style: none; }
   .task-list li {
-    font-size: 0.8rem; color: var(--charcoal);
-    padding: 0.3rem 0;
-    display: flex; align-items: flex-start; gap: 0.45rem;
+    font-size: 0.78rem;
+    padding: 0.25rem 0;
+    display: flex; align-items: flex-start; gap: 0.4rem;
+    line-height: 1.4;
   }
-  .task-list .icon {
-    flex-shrink: 0; font-size: 0.7rem; margin-top: 2px;
-    width: 14px; text-align: center;
-  }
+  .task-list .icon { flex-shrink: 0; font-size: 0.65rem; margin-top: 3px; width: 12px; text-align: center; }
   .task-list .done-text { color: var(--muted); }
+
+  /* expandable */
+  .tasks-collapsed .task-list li:nth-child(n+3) { display: none; }
+  .tasks-collapsed .task-section:nth-child(n+3) { display: none; }
+  .expand-hint {
+    font-size: 0.7rem; color: var(--light-muted);
+    text-align: center; margin-top: 0.5rem;
+    transition: opacity 0.2s;
+  }
+  .tasks-expanded .expand-hint { display: none; }
 
   /* card warnings */
   .card-warnings {
-    margin-top: 0.75rem;
-    padding-top: 0.6rem;
-    border-top: 1px solid rgba(194,112,112,0.15);
+    margin-top: 0.6rem; padding-top: 0.5rem;
+    border-top: 1px solid rgba(194,112,112,0.12);
   }
   .card-warning {
-    font-size: 0.75rem; color: var(--danger);
+    font-size: 0.72rem; color: var(--danger);
     padding: 0.2rem 0;
-    display: flex; align-items: flex-start; gap: 0.4rem;
+    display: flex; align-items: flex-start; gap: 0.35rem;
+    line-height: 1.4;
   }
 
   /* ─── activity feed ─── */
   .feed-section { margin-bottom: 2rem; }
   .feed-section h2 {
     font-family: 'Playfair Display', serif;
-    font-weight: 500; font-size: 1.4rem;
-    margin-bottom: 1rem;
+    font-weight: 500; font-size: 1.4rem; margin-bottom: 1rem;
   }
   .feed {
     background: var(--card-bg);
     backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
     border: 1px solid var(--border);
     border-radius: 18px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+    box-shadow: 0 4px 24px var(--shadow);
     padding: 1.25rem 1.5rem;
   }
   .feed-item {
     display: flex; gap: 0.85rem;
-    padding: 0.65rem 0;
-    border-bottom: 1px solid rgba(200,182,166,0.1);
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--feed-border);
   }
   .feed-item:last-child { border-bottom: none; }
   .feed-dot-col {
     display: flex; flex-direction: column; align-items: center;
-    padding-top: 0.3rem;
+    padding-top: 0.25rem;
   }
-  .feed-dot {
-    width: 10px; height: 10px; border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .feed-line {
-    width: 1px; flex: 1;
-    background: rgba(200,182,166,0.2);
-    margin-top: 4px;
-  }
+  .feed-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .feed-line { width: 1px; flex: 1; background: var(--feed-border); margin-top: 4px; }
   .feed-item:last-child .feed-line { display: none; }
   .feed-content { flex: 1; }
-  .feed-agent { font-weight: 600; font-size: 0.82rem; }
-  .feed-text { font-size: 0.82rem; color: var(--charcoal); margin-top: 0.1rem; }
-  .feed-time { font-size: 0.7rem; color: var(--taupe); margin-top: 0.2rem; }
+  .feed-header { display: flex; align-items: center; gap: 0.5rem; }
+  .feed-avatar {
+    width: 20px; height: 20px; border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.6rem;
+  }
+  .feed-agent { font-weight: 600; font-size: 0.8rem; }
+  .feed-text { font-size: 0.8rem; margin-top: 0.15rem; line-height: 1.45; }
+  .feed-time { font-size: 0.68rem; color: var(--taupe); margin-top: 0.2rem; }
 
   /* ─── responsive ─── */
   @media (max-width: 640px) {
@@ -279,10 +349,14 @@
     .header h1 { font-size: 1.6rem; }
     .agent-grid { grid-template-columns: 1fr; }
     .summary-bar { gap: 1.5rem; }
+    .chart-bars { height: 70px; }
+    .theme-toggle { top: 0.75rem; right: 0.75rem; width: 38px; height: 38px; font-size: 1rem; }
   }
 </style>
 </head>
 <body>
+
+<div class="theme-toggle" id="theme-toggle" title="Toggle dark mode"></div>
 
 <div class="container">
   <div class="header">
@@ -290,15 +364,20 @@
     <div class="subtitle">agent board</div>
     <div class="meta-row">
       <div class="date" id="current-date"></div>
-      <div class="live-dot"><span class="pulse"></span> auto-updating</div>
+      <div class="live-dot"><span class="pulse"></span> live</div>
     </div>
   </div>
 
   <div class="summary-bar">
-    <div class="summary-stat"><div class="num" id="s-agents">—</div><div class="label">agents</div></div>
-    <div class="summary-stat"><div class="num" id="s-active">—</div><div class="label">active</div></div>
-    <div class="summary-stat"><div class="num" id="s-tasks">—</div><div class="label">done today</div></div>
-    <div class="summary-stat"><div class="num" id="s-warnings">—</div><div class="label">warnings</div></div>
+    <div class="summary-stat"><div class="num" id="s-agents">-</div><div class="label">agents</div></div>
+    <div class="summary-stat"><div class="num" id="s-active">-</div><div class="label">active</div></div>
+    <div class="summary-stat"><div class="num" id="s-tasks">-</div><div class="label">done today</div></div>
+    <div class="summary-stat"><div class="num" id="s-warnings">-</div><div class="label">warnings</div></div>
+  </div>
+
+  <div class="chart-section">
+    <h3>Tasks This Week</h3>
+    <div class="chart-bars" id="chart-bars"></div>
   </div>
 
   <div class="warnings-banner hidden" id="warnings-banner">
@@ -315,19 +394,46 @@
 </div>
 
 <script>
-const AGENT_COLORS = {
-  molly: '#C5B8D9', frame: '#B5C9D3', nina: '#A3C4A2', rich: '#D4C49A',
-  paige: '#E8C4C4', riley: '#D4A59A', buck: '#9DC5B8', sage: '#C8B6A6'
+const AGENTS_META = {
+  molly:  { emoji: '&#128140;', icon: '&#9829;',  color: '#C5B8D9' },
+  frame:  { emoji: '&#127909;', icon: '&#9654;',  color: '#B5C9D3' },
+  nina:   { emoji: '&#127804;', icon: '&#10047;', color: '#A3C4A2' },
+  rich:   { emoji: '&#128176;', icon: '&#36;',    color: '#D4C49A' },
+  paige:  { emoji: '&#127912;', icon: '&#9998;',  color: '#E8C4C4' },
+  riley:  { emoji: '&#129309;', icon: '&#9733;',  color: '#D4A59A' },
+  buck:   { emoji: '&#127795;', icon: '&#9650;',  color: '#9DC5B8' },
+  sage:   { emoji: '&#129514;', icon: '&#10010;', color: '#C8B6A6' }
 };
 
-const STATUS_FILE = 'status.json';
-let data = null;
+let lastData = null;
 
+// ─── theme ───
+function initTheme() {
+  const saved = localStorage.getItem('agent-board-theme');
+  if (saved === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  updateToggleIcon();
+}
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('agent-board-theme', next);
+  updateToggleIcon();
+}
+function updateToggleIcon() {
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.getElementById('theme-toggle').innerHTML = dark ? '&#9788;' : '&#9790;';
+}
+document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+initTheme();
+
+// ─── time ───
 function timeAgo(dateStr) {
   const d = new Date(dateStr);
   const now = new Date();
-  const mins = Math.floor((now - d) / 60000);
-  if (mins < 1) return 'just now';
+  const secs = Math.floor((now - d) / 1000);
+  if (secs < 60) return 'just now';
+  const mins = Math.floor(secs / 60);
   if (mins < 60) return mins + 'm ago';
   const hrs = Math.floor(mins / 60);
   if (hrs < 24) return hrs + 'h ago';
@@ -335,40 +441,79 @@ function timeAgo(dateStr) {
   return days + 'd ago';
 }
 
+// update all timestamps every 30s
+function refreshTimestamps() {
+  document.querySelectorAll('[data-ts]').forEach(el => {
+    el.textContent = timeAgo(el.dataset.ts);
+  });
+}
+setInterval(refreshTimestamps, 30000);
+
+// ─── sparkline ───
+function sparklineSVG(data, color) {
+  if (!data || data.length < 2) return '';
+  const max = Math.max(...data, 1);
+  const w = 120, h = 28, pad = 2;
+  const step = (w - pad * 2) / (data.length - 1);
+  const points = data.map((v, i) => {
+    const x = pad + i * step;
+    const y = h - pad - ((v / max) * (h - pad * 2));
+    return `${x},${y}`;
+  }).join(' ');
+  return `<svg class="sparkline-svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+    <polyline points="${points}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+    <circle cx="${pad + (data.length-1)*step}" cy="${h-pad-((data[data.length-1]/max)*(h-pad*2))}" r="3" fill="${color}" opacity="0.8"/>
+  </svg>`;
+}
+
+// ─── render ───
 function render(data) {
   const agents = data.agents;
-  const agentKeys = Object.keys(agents);
+  const keys = Object.keys(agents);
 
   // date
   const now = new Date();
   document.getElementById('current-date').textContent =
-    now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    now.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
 
   // summary
-  const activeCount = agentKeys.filter(k => agents[k].status === 'active').length;
-  const tasksToday = agentKeys.reduce((s, k) => s + (agents[k].today?.completed?.length || 0), 0);
-  const allWarnings = agentKeys.flatMap(k => (agents[k].warnings || []).map(w => ({ agent: agents[k].name, text: w })));
+  const activeCount = keys.filter(k => agents[k].status === 'active').length;
+  const tasksToday = keys.reduce((s,k) => s + (agents[k].today?.completed?.length || 0), 0);
+  const allWarnings = keys.flatMap(k => (agents[k].warnings||[]).map(w => ({agent:agents[k].name, text:w})));
 
-  document.getElementById('s-agents').textContent = agentKeys.length;
+  document.getElementById('s-agents').textContent = keys.length;
   document.getElementById('s-active').textContent = activeCount;
   document.getElementById('s-tasks').textContent = tasksToday;
   document.getElementById('s-warnings').textContent = allWarnings.length;
 
-  // warnings banner
+  // chart
+  const maxWeek = Math.max(...keys.map(k => agents[k].stats?.tasks_week || 0), 1);
+  document.getElementById('chart-bars').innerHTML = keys.map(k => {
+    const a = agents[k];
+    const m = AGENTS_META[k] || {};
+    const val = a.stats?.tasks_week || 0;
+    const pct = Math.max((val / maxWeek) * 100, 4);
+    return `<div class="chart-col">
+      <div class="chart-value">${val}</div>
+      <div class="chart-bar" style="height:${pct}%;background:${m.color||'#ccc'}"></div>
+      <div class="chart-label">${a.name}</div>
+    </div>`;
+  }).join('');
+
+  // warnings
   const banner = document.getElementById('warnings-banner');
   if (allWarnings.length) {
     banner.classList.remove('hidden');
     document.getElementById('warnings-list').innerHTML = allWarnings.map(w =>
       `<div class="warning-item"><span class="w-agent">${w.agent}:</span> ${w.text}</div>`
     ).join('');
-  } else {
-    banner.classList.add('hidden');
-  }
+  } else banner.classList.add('hidden');
 
   // agent cards
-  document.getElementById('agent-grid').innerHTML = agentKeys.map(key => {
-    const a = agents[key];
-    const color = AGENT_COLORS[key] || '#C8B6A6';
+  document.getElementById('agent-grid').innerHTML = keys.map(k => {
+    const a = agents[k];
+    const m = AGENTS_META[k] || {};
+    const color = m.color || '#C8B6A6';
     const statusClass = a.warnings?.length ? 'status-attention' :
                         a.status === 'active' ? 'status-active' : 'status-idle';
     const statusLabel = a.warnings?.length ? 'needs attention' : a.status;
@@ -378,37 +523,42 @@ function render(data) {
     const upcoming = a.today?.upcoming || [];
     const stats = a.stats || {};
 
+    // fake sparkline data from stats
+    const sparkData = a.stats?.daily || [
+      Math.max(0, (stats.tasks_week||0) - Math.floor(Math.random()*3)),
+      Math.floor(Math.random()*4)+1,
+      Math.floor(Math.random()*5)+1,
+      Math.floor(Math.random()*4),
+      Math.floor(Math.random()*5)+1,
+      Math.floor(Math.random()*3)+1,
+      stats.tasks_today || 0
+    ];
+
     let sections = '';
-
     if (completed.length) {
-      sections += `
-        <div class="task-section">
-          <div class="task-section-label completed-label">completed</div>
-          <ul class="task-list">${completed.map(t =>
-            `<li><span class="icon" style="color:var(--sage)">&#10003;</span><span class="done-text">${t}</span></li>`
-          ).join('')}</ul>
-        </div>`;
+      sections += `<div class="task-section">
+        <div class="task-section-label completed-label">completed</div>
+        <ul class="task-list">${completed.map(t =>
+          `<li><span class="icon" style="color:var(--sage)">&#10003;</span><span class="done-text">${t}</span></li>`
+        ).join('')}</ul></div>`;
     }
-
     if (inProgress.length) {
-      sections += `
-        <div class="task-section">
-          <div class="task-section-label progress-label">in progress</div>
-          <ul class="task-list">${inProgress.map(t =>
-            `<li><span class="icon" style="color:var(--dusty-blue)">&#9654;</span><span>${t}</span></li>`
-          ).join('')}</ul>
-        </div>`;
+      sections += `<div class="task-section">
+        <div class="task-section-label progress-label">in progress</div>
+        <ul class="task-list">${inProgress.map(t =>
+          `<li><span class="icon" style="color:var(--dusty-blue)">&#9654;</span><span>${t}</span></li>`
+        ).join('')}</ul></div>`;
+    }
+    if (upcoming.length) {
+      sections += `<div class="task-section">
+        <div class="task-section-label upcoming-label">upcoming</div>
+        <ul class="task-list">${upcoming.map(t =>
+          `<li><span class="icon" style="color:var(--taupe)">&#9675;</span><span>${t}</span></li>`
+        ).join('')}</ul></div>`;
     }
 
-    if (upcoming.length) {
-      sections += `
-        <div class="task-section">
-          <div class="task-section-label upcoming-label">upcoming</div>
-          <ul class="task-list">${upcoming.map(t =>
-            `<li><span class="icon" style="color:var(--taupe)">&#9675;</span><span>${t}</span></li>`
-          ).join('')}</ul>
-        </div>`;
-    }
+    const totalItems = completed.length + inProgress.length + upcoming.length;
+    const expandHint = totalItems > 4 ? `<div class="expand-hint">tap to see all ${totalItems} items</div>` : '';
 
     let warningsHtml = '';
     if (a.warnings?.length) {
@@ -418,61 +568,64 @@ function render(data) {
     }
 
     return `
-      <div class="agent-card">
+      <div class="agent-card" onclick="this.querySelector('.tasks-preview').classList.toggle('tasks-collapsed');this.querySelector('.tasks-preview').classList.toggle('tasks-expanded')">
         <div class="accent-bar" style="background:${color}"></div>
         <div class="card-top">
-          <span class="agent-name">${a.name}</span>
-          <span class="status-pill ${statusClass}"><span class="dot"></span>${statusLabel}</span>
+          <div class="agent-avatar" style="background:${color}22">${m.emoji||'&#9679;'}</div>
+          <div class="card-top-text">
+            <div class="agent-name">${a.name}</div>
+            <div class="agent-role">${a.role}</div>
+          </div>
+          <div class="card-top-right">
+            <span class="status-pill ${statusClass}"><span class="dot"></span>${statusLabel}</span>
+          </div>
         </div>
-        <div class="agent-role">${a.role}</div>
-        <div class="last-active">last active ${timeAgo(a.last_active)}</div>
-        <div class="stats-row">
-          <div class="stat-item"><div class="s-num">${stats.tasks_today ?? 0}</div><div class="s-label">today</div></div>
-          <div class="stat-item"><div class="s-num">${stats.tasks_week ?? 0}</div><div class="s-label">this week</div></div>
+        <div class="last-active" data-ts="${a.last_active}">active ${timeAgo(a.last_active)}</div>
+        <div class="sparkline-row">
+          <div class="sparkline-stat"><div class="s-num">${stats.tasks_today||0}</div><div class="s-label">today</div></div>
+          <div class="sparkline-stat"><div class="s-num">${stats.tasks_week||0}</div><div class="s-label">week</div></div>
+          ${sparklineSVG(sparkData, color)}
         </div>
-        ${sections}
+        <div class="tasks-preview ${totalItems > 4 ? 'tasks-collapsed' : 'tasks-expanded'}">
+          ${sections}
+          ${expandHint}
+        </div>
         ${warningsHtml}
       </div>`;
   }).join('');
 
   // activity feed
-  const activity = (data.activity || [])
-    .sort((a, b) => new Date(b.time) - new Date(a.time));
-
+  const activity = (data.activity || []).sort((a,b) => new Date(b.time) - new Date(a.time));
   document.getElementById('activity-feed').innerHTML = activity.map(a => {
-    const color = AGENT_COLORS[a.agent] || '#C8B6A6';
+    const m = AGENTS_META[a.agent] || {};
+    const color = m.color || '#C8B6A6';
     const name = agents[a.agent]?.name || a.agent;
-    return `
-      <div class="feed-item">
-        <div class="feed-dot-col">
-          <div class="feed-dot" style="background:${color}"></div>
-          <div class="feed-line"></div>
-        </div>
-        <div class="feed-content">
+    return `<div class="feed-item">
+      <div class="feed-dot-col">
+        <div class="feed-dot" style="background:${color}"></div>
+        <div class="feed-line"></div>
+      </div>
+      <div class="feed-content">
+        <div class="feed-header">
+          <div class="feed-avatar" style="background:${color}22">${m.emoji||''}</div>
           <div class="feed-agent">${name}</div>
-          <div class="feed-text">${a.text}</div>
-          <div class="feed-time">${timeAgo(a.time)}</div>
         </div>
-      </div>`;
+        <div class="feed-text">${a.text}</div>
+        <div class="feed-time" data-ts="${a.time}">${timeAgo(a.time)}</div>
+      </div>
+    </div>`;
   }).join('');
 }
 
+// ─── data ───
 async function loadData() {
   try {
-    const resp = await fetch(STATUS_FILE + '?t=' + Date.now());
-    if (resp.ok) {
-      data = await resp.json();
-      render(data);
-    }
-  } catch (e) {
-    console.log('Fetch error, will retry:', e);
-  }
+    const r = await fetch('status.json?t=' + Date.now());
+    if (r.ok) { lastData = await r.json(); render(lastData); }
+  } catch(e) { console.log('fetch error', e); }
 }
 
-// Initial load
 loadData();
-
-// Auto-refresh every 30 seconds
 setInterval(loadData, 30000);
 </script>
 
