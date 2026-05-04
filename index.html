@@ -296,6 +296,44 @@ body::before {
   margin-bottom: 2.5rem;
 }
 
+/* widescreen: all agents in one row */
+@media (min-width: 1200px) {
+  .container { max-width: 100%; padding: 1.5rem 2rem; }
+  .header { margin-bottom: 1.25rem; }
+  .header h1 { font-size: 2rem; }
+  .summary-bar { margin-bottom: 1.25rem; padding: 1rem 0; border-radius: 16px; }
+  .summary-stat .num { font-size: 1.6rem; }
+  .chart-section { margin-bottom: 1.25rem; padding: 1.25rem 1.5rem; }
+  .chart-bars { height: 80px; }
+  .agent-grid {
+    grid-template-columns: repeat(8, 1fr);
+    gap: 0.75rem;
+  }
+  .agent-card {
+    padding: 1rem 1rem 0.85rem;
+    border-radius: 16px;
+  }
+  .agent-card:hover { transform: translateY(-2px); }
+  .card-top { flex-direction: column; align-items: flex-start; gap: 0.5rem; margin-bottom: 0; }
+  .agent-avatar { width: 36px; height: 36px; border-radius: 10px; font-size: 1.1rem; }
+  .agent-name { font-size: 0.95rem; }
+  .agent-role { font-size: 0.66rem; }
+  .card-top-right { align-items: flex-start; position: absolute; top: 1rem; right: 1rem; }
+  .status-pill { font-size: 0.58rem; padding: 0.18rem 0.45rem; }
+  .last-active { font-size: 0.62rem; margin: 0.35rem 0 0.5rem; }
+  .sparkline-row { display: none; }
+  .task-section-label { font-size: 0.58rem; }
+  .task-list li { font-size: 0.7rem; line-height: 1.35; }
+  .task-list .icon { font-size: 0.55rem; margin-top: 3px; }
+  .expand-hint { font-size: 0.62rem; }
+  .card-warnings { margin-top: 0.5rem; padding-top: 0.4rem; }
+  .card-warning { font-size: 0.66rem; }
+  .feed-section h2 { font-size: 1.1rem; }
+  .feed { padding: 1rem 1.25rem; }
+  .feed-text { font-size: 0.74rem; }
+  .warnings-banner { margin-bottom: 1.25rem; padding: 1rem 1.25rem; }
+}
+
 .agent-card {
   background: var(--card-bg);
   backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur));
@@ -419,6 +457,10 @@ body::before {
 /* expandable */
 .tasks-collapsed .task-list li:nth-child(n+3) { display: none; }
 .tasks-collapsed .task-section:nth-child(n+3) { display: none; }
+@media (min-width: 1200px) {
+  .tasks-collapsed .task-list li:nth-child(n+2) { display: none; }
+  .tasks-collapsed .task-section:nth-child(n+2) { display: none; }
+}
 .expand-hint {
   font-size: 0.68rem;
   color: var(--light-muted);
@@ -779,7 +821,9 @@ function render(data) {
     }
 
     const totalItems = completed.length + inProgress.length + upcoming.length;
-    const expandHint = totalItems > 4 ? `<div class="expand-hint">tap to see all ${totalItems} items</div>` : '';
+    const isWide = window.innerWidth >= 1200;
+    const collapseThreshold = isWide ? 2 : 4;
+    const expandHint = totalItems > collapseThreshold ? `<div class="expand-hint">tap to see all ${totalItems} items</div>` : '';
 
     let warningsHtml = '';
     if (a.warnings?.length) {
@@ -807,7 +851,7 @@ function render(data) {
           <div class="sparkline-stat"><div class="s-num">${stats.tasks_week||0}</div><div class="s-label">week</div></div>
           ${sparklineSVG(sparkData, color)}
         </div>
-        <div class="tasks-preview ${totalItems > 4 ? 'tasks-collapsed' : 'tasks-expanded'}">
+        <div class="tasks-preview ${totalItems > collapseThreshold ? 'tasks-collapsed' : 'tasks-expanded'}">
           ${sections}
           ${expandHint}
         </div>
